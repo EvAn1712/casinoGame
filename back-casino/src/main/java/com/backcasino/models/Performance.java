@@ -1,4 +1,4 @@
-package main.java.com.backskeleton.models;
+package com.backcasino.models;
 
 public class Performance {
 
