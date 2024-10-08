@@ -38,7 +38,7 @@ public class Player {
         this.tokenBalance = tokenBalance;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

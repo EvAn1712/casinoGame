@@ -12,18 +12,22 @@ public class Bet {
 
     private int amount;
 
-    @Column(name = "player_id")
-    private int playerId;
+    // Association ManyToOne avec Player
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
 
-    @Column(name = "game_id")
-    private int gameId;
+    // Association ManyToOne avec Game
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
     public Bet() {}
 
-    public Bet(int amount, int playerId, int gameId) {
+    public Bet(int amount, Player player, Game game) {
         this.amount = amount;
-        this.playerId = playerId;
-        this.gameId = gameId;
+        this.player = player;
+        this.game = game;
     }
 
     // Getters et setters
@@ -43,19 +47,19 @@ public class Bet {
         this.amount = amount;
     }
 
-    public int getPlayerId() {
-        return playerId;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public int getGameId() {
-        return gameId;
+    public Game getGame() {
+        return game;
     }
 
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

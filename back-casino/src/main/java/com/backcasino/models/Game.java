@@ -6,55 +6,36 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "games")
 public class Game {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    @Column(name = "player_id")
-    private int player_id;
+    @ManyToOne
+    @JoinColumn(name = "player_id") // Indique que player_id est la clé étrangère
+    private Player player; // Référence à l'entité Player
 
-    @Column(name = "start_time")
     private LocalDateTime startTime;
-
-    @Column(name = "end_time")
     private LocalDateTime endTime;
+    private double result;
+    private String gameType;
+    private int winningNumber;
 
-    @Column(name = "bet_amount")
-    private int betAmount;
-
-    @Column(name = "game_type")
-    private String gameType; // Type de jeu (roulette, blackjack, etc.)
-
-    @Column(name = "winning_number")
-    private int winningNumber; // Numéro gagnant de la roulette
-
-    @Column(name = "result")
-    private double result; // "WIN" ou "LOSE" - Résultat final du jeu
-
-    // Constructors, Getters, and Setters
-    public Game() {}
-
-    public Game(Integer id, int player_id, LocalDateTime startTime, int betAmount) {
-        this.id = id;
-        this.player_id = player_id;
-        this.startTime = startTime;
-        this.betAmount = betAmount;
-    }
-
-    public int getId() {
+    // Getters et setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getPlayer_id() {
-        return player_id;
+    public Player getPlayer() {
+        return player; // Récupère le joueur associé
     }
 
-    public void setPlayer_id(int player_id) {
-        this.player_id = player_id;
+    public void setPlayer(Player player) {
+        this.player = player; // Définit le joueur associé
     }
 
     public LocalDateTime getStartTime() {
@@ -73,12 +54,12 @@ public class Game {
         this.endTime = endTime;
     }
 
-    public int getBetAmount() {
-        return betAmount;
+    public double getResult() {
+        return result;
     }
 
-    public void setBetAmount(int betAmount) {
-        this.betAmount = betAmount;
+    public void setResult(double result) {
+        this.result = result;
     }
 
     public String getGameType() {
@@ -95,13 +76,5 @@ public class Game {
 
     public void setWinningNumber(int winningNumber) {
         this.winningNumber = winningNumber;
-    }
-
-    public double getResult() {
-        return result;
-    }
-
-    public void setResult(double result) {
-        this.result = result;
     }
 }

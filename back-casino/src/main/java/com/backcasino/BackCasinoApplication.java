@@ -1,11 +1,11 @@
 package com.backcasino;
 
+import com.backcasino.services.PlayerService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 public class BackCasinoApplication {
@@ -15,13 +15,19 @@ public class BackCasinoApplication {
     }
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1"); // Utilisation d'une base de données H2 en mémoire
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
+    public CommandLineRunner demo(PlayerService playerService) {
+        return (args) -> {
+            // Créer un joueur
+            playerService.createPlayer("john_doe", "hashedPassword", "john@example.com");
+
+            // Rechercher un joueur par ID
+            playerService.findPlayerById(1);
+
+            // Mettre à jour le solde de jetons
+            playerService.updateTokenBalance(1, 50);
+
+            // Supprimer un joueur
+            playerService.deletePlayerById(1);
+        };
     }
 }
-
