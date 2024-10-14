@@ -10,4 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerDAO extends CrudRepository<Player, Integer> {
+    Player findByUsername(String username);
 }
