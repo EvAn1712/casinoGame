@@ -30,8 +30,8 @@ public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
     private List<Game> games;
 
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
-    private List<Bet> bets;
+   // @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    //private List<Bet> bets;
 
     public Player() {}
 

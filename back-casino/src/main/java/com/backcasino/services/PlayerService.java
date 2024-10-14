@@ -12,14 +12,18 @@ import java.util.Optional;
 public class PlayerService {
 
     @Autowired
-    private PlayerDAO playerDAO;
+    private static PlayerDAO playerDAO;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private static BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void registerUser(Player player) {
-        player.setPasswordHash(bCryptPasswordEncoder.encode(player.getPasswordHash()));
+    public static void registerUser(Player player) {
+        //player.setPasswordHash(bCryptPasswordEncoder.encode(player.getPasswordHash()));
         playerDAO.save(player);
+    }
+
+    public void createPlayer(String username, String password, String email) {
+        playerDAO.save(new Player(1, username, password, email, 0));
     }
 
     public Player findByUsername(String username) {
