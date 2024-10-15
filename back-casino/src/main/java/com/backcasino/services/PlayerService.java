@@ -15,12 +15,15 @@ public class PlayerService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void createPlayer(String username, String password, String email) {
-        // Encode le mot de passe avant de le sauvegarder
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
-        Player player = new Player(0, username, encodedPassword, email, 1000);  // Création du joueur avec un solde de jetons initial à 0
+    public void createPlayer(String username, String passwordHash, String email) {
+        Player player = new Player();
+        player.setUsername(username);
+        player.setPasswordHash(passwordHash);
+        player.setEmail(email);
+        player.setTokenBalance(1000);
         playerDAO.save(player);
     }
+
 
     public Player findByUsername(String username) {
         return playerDAO.findByUsername(username);
