@@ -57,9 +57,6 @@ public class BetService {
         betDAO.save(bet);
     }
 
-    public void updateBet(Bet bet) {
-        betDAO.save(bet);
-    }
 
     public void deleteBet(int id) {
         betDAO.deleteById(id);

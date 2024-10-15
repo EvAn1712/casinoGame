@@ -1,10 +1,14 @@
 package com.backcasino.controller;
 
+import com.backcasino.DTO.PlayerDTO;
 import com.backcasino.DTO.PlayerLoginDTO;
 import com.backcasino.DTO.PlayerRegistrationDTO;
 import com.backcasino.models.Player;
 import com.backcasino.services.PlayerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -20,25 +24,33 @@ public class PlayerController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public void registerPlayer(@RequestBody PlayerRegistrationDTO registrationData) {
-        String encodedPassword = passwordEncoder.encode(registrationData.getPassword());
-        playerService.createPlayer(registrationData.getUsername(), encodedPassword, registrationData.getEmail());
+    public ResponseEntity<String> registerPlayer(@RequestBody @Valid PlayerRegistrationDTO registrationData) {
+        try {
+            String encodedPassword = passwordEncoder.encode(registrationData.getPassword());
+            playerService.createPlayer(registrationData.getUsername(), encodedPassword, registrationData.getEmail());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Utilisateur enregistré avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur lors de l'enregistrement");
+        }
     }
 
     @PostMapping("/login")
-    public boolean loginPlayer(@RequestBody PlayerLoginDTO loginData) {
+    public ResponseEntity<?> loginPlayer(@RequestBody PlayerLoginDTO loginData) {
         Player player = playerService.findByUsername(loginData.getUsername());
 
         if (player == null) {
-            System.out.println("Utilisateur non trouvé");
-            return false;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Utilisateur non trouvé");
         }
 
         boolean passwordMatch = passwordEncoder.matches(loginData.getPassword(), player.getPasswordHash());
         if (!passwordMatch) {
-            System.out.println("Le mot de passe ne correspond pas");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Mot de passe incorrect");
         }
 
-        return passwordMatch;
+        PlayerDTO playerDTO = new PlayerDTO(player);
+        return ResponseEntity.ok(playerDTO);
     }
+
 }

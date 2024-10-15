@@ -24,6 +24,9 @@ public class PlayerService {
         playerDAO.save(player);
     }
 
+    public Player findById(Integer id) {
+        return playerDAO.findById(id).orElse(null);
+    }
 
     public Player findByUsername(String username) {
         return playerDAO.findByUsername(username);

@@ -115,4 +115,8 @@ public class GameService {
         game.setEndTime(LocalDateTime.now());
         gameDAO.save(game);
     }
+
+    public Game findById(Integer gameId) {
+        return gameDAO.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
+    }
 }
