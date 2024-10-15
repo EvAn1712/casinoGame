@@ -6,6 +6,7 @@ import com.backcasino.models.Bet;
 import com.backcasino.models.Card;
 import com.backcasino.models.Game;
 import com.backcasino.models.Player;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class GameService {
     @Autowired
     private BetService betService;
 
+    @Transactional
     public Game createGame(Integer playerId, int amount) {
         Player player = playerDAO.findById(playerId).orElseThrow();
         if (player.getTokenBalance() < amount) {
