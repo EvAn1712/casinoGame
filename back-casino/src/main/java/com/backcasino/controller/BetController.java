@@ -1,5 +1,7 @@
 //package com.backcasino.controller;
 //
+//import com.backcasino.models.Bet;
+//import com.backcasino.models.Game;
 //import com.backcasino.models.Player;
 //import com.backcasino.services.BetService;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,10 @@
 //    @Autowired
 //    private BetService betService;
 //
-//    @PostMapping("/place_roulette_bet")
-//    public void placeRouletteBet(@RequestParam int amount, @RequestParam int[] numbers, @RequestParam String betType) {
+//    @PostMapping("/place_bet")
+//    public void placeBet(@RequestParam int amount, @RequestParam int[] numbers) {
 //        Player player = new Player(); // Retrieve the player instance
-//        RouletteGame game = new RouletteGame(); // Retrieve the current game instance
+//        Game game = new Game(); // Retrieve the current game instance
 //
-//        betService.placeRouletteBet(amount, player, game, betType, numbers);
 //    }
 //}

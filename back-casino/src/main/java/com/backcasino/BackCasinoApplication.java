@@ -2,8 +2,10 @@ package com.backcasino;
 
 import com.backcasino.models.Game;
 import com.backcasino.models.Player;
+import com.backcasino.models.Bet;
 import com.backcasino.services.GameService;
 import com.backcasino.services.PlayerService;
+import com.backcasino.services.BetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +24,12 @@ public class BackCasinoApplication {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private BetService betService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public static void main(String[] args) {
         SpringApplication.run(BackCasinoApplication.class, args);
     }
@@ -29,20 +37,29 @@ public class BackCasinoApplication {
     @Bean
     public CommandLineRunner demo() {
         return args -> {
-            // Créer un joueur pour la démonstration
+            // Créer un joueur de test si nécessaire
+            Player player = playerService.findByUsername("test2");
+            if (player == null) {
+                playerService.createPlayer("test2", passwordEncoder.encode("test2"), "test2");
+                player = playerService.findByUsername("test2");
+            }
+            System.out.println("Joueur : " + player.getUsername());
 
-            playerService.createPlayer("test", "test", "test");
-            Player player = playerService.findByUsername("test");
-            System.out.println("Joueur créé avec succès : " + player.getUsername());
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Entrez le montant du pari : ");
+            int betAmount = scanner.nextInt();
 
-            // Créer une nouvelle partie pour le joueur créé
-            Game game = gameService.createGame(player.getId()); // Assurez-vous que l'ID est correct
+            Bet bet = new Bet();
+
+            Game game = gameService.createGame(player.getId(), betAmount);
+            betService.placeBet(betAmount, player, game);
+            //betService.updateBet(bet);
+
             gameService.startGame(game);
 
             System.out.println("Jeu démarré pour le joueur " + game.getPlayer().getUsername());
             afficherEtatJeu(game);
 
-            Scanner scanner = new Scanner(System.in);
             boolean finDuJeu = false;
 
             // Boucle de jeu pour que le joueur prenne des décisions
@@ -87,6 +104,14 @@ public class BackCasinoApplication {
                 }
             }
 
+            if (game.getPlayerScore() > 21 || game.getDealerScore() >= game.getPlayerScore()) {
+                gameService.loseGame(game, bet);
+                System.out.println("Vous avez perdu.");
+            } else {
+                gameService.winGame(game, bet);
+                System.out.println("Vous avez gagné !");
+            }
+
             gameService.endGame(game.getId());
             System.out.println("Partie terminée pour le joueur " + game.getPlayer().getUsername());
         };
@@ -97,5 +122,10 @@ public class BackCasinoApplication {
         System.out.println("Score du joueur : " + game.getPlayerScore());
         System.out.println("Main du croupier : " + game.getDealerHand());
         System.out.println("Score du croupier : " + game.getDealerScore());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

@@ -1,16 +1,15 @@
 package com.backcasino.services;
 
 import com.backcasino.DAO.GameDAO;
-import com.backcasino.DAO.PlayerDAO; // Ajout de l'import pour PlayerDAO
+import com.backcasino.DAO.PlayerDAO;
+import com.backcasino.models.Bet;
 import com.backcasino.models.Card;
-import com.backcasino.models.Deck;
 import com.backcasino.models.Game;
 import com.backcasino.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class GameService {
@@ -21,9 +20,17 @@ public class GameService {
     @Autowired
     private PlayerDAO playerDAO;
 
-    public Game createGame(Integer playerId) {
+    @Autowired
+    private BetService betService;
+
+    public Game createGame(Integer playerId, int amount) {
         Player player = playerDAO.findById(playerId).orElseThrow();
+        if (player.getTokenBalance() < amount) {
+            throw new IllegalArgumentException("Not enough tokens to play");
+        }
+        player.setTokenBalance(player.getTokenBalance() - amount);
         Game game = new Game();
+        game.getDeck().initializeDeck();
         game.getDeck().shuffle();
         game.setPlayer(player);
         game.setStartTime(LocalDateTime.now());
@@ -72,23 +79,38 @@ public class GameService {
         playerStand(game);
     }
 
-    private void checkGameStatus(Game game) {
+    private boolean checkGameStatus(Game game) {
         if (game.getPlayerScore() > 21) {
             game.setGameOver(true);
+            return false;
         } else if (game.getDealerScore() > 21) {
             game.setGameOver(true);
+            return true;
         } else if (game.getPlayerScore() == 21) {
             game.setGameOver(true);
+            return false;
         } else if (game.getDealerScore() == 21) {
             game.setGameOver(true);
+            return true;
         }
+        return false;
     }
 
-    public Game endGame(Integer gameId) {
+    public void winGame(Game game, Bet bet) {
+        game.setGameOver(true);
+        betService.resolveBet(bet, true);
+        gameDAO.save(game);
+    }
+
+    public void loseGame(Game game, Bet bet) {
+        game.setGameOver(true);
+        betService.resolveBet(bet, false);
+        gameDAO.save(game);
+    }
+
+    public void endGame(Integer gameId) {
         Game game = gameDAO.findById(gameId).orElseThrow();
         game.setEndTime(LocalDateTime.now());
-        return gameDAO.save(game);
+        gameDAO.save(game);
     }
-
-
 }

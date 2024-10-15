@@ -24,7 +24,9 @@ public class Game {
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Transient
     private int dealerScore;
+    @Transient
     private int playerScore;
     private boolean isGameOver;
     @Transient

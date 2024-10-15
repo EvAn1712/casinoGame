@@ -14,8 +14,8 @@ public class PlayerController {
     private PlayerService playerService;
 
     @PostMapping("/register")
-    public void registerPlayer(@RequestBody Player player) {
-        playerService.registerUser(player);
+    public void registerPlayer(@RequestBody String username, @RequestBody String password, @RequestBody String email) {
+        playerService.createPlayer( username,  password,  email);
     }
 
     @PostMapping("/login")

@@ -6,27 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class PlayerService {
 
     @Autowired
-    private static PlayerDAO playerDAO;
+    private PlayerDAO playerDAO;
 
     @Autowired
-    private static BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public static void registerUser(Player player) {
-        //player.setPasswordHash(bCryptPasswordEncoder.encode(player.getPasswordHash()));
-        playerDAO.save(player);
-    }
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void createPlayer(String username, String password, String email) {
-        playerDAO.save(new Player(1, username, password, email, 0));
+        // Encode le mot de passe avant de le sauvegarder
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        Player player = new Player(0, username, encodedPassword, email, 1000);  // Création du joueur avec un solde de jetons initial à 0
+        playerDAO.save(player);
     }
 
     public Player findByUsername(String username) {
         return playerDAO.findByUsername(username);
     }
+
 }
