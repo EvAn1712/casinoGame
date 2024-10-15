@@ -1,5 +1,6 @@
 package com.backcasino.controller;
 
+import com.backcasino.DTO.PlayerLoginDTO;
 import com.backcasino.DTO.PlayerRegistrationDTO;
 import com.backcasino.models.Player;
 import com.backcasino.services.PlayerService;
@@ -20,21 +21,20 @@ public class PlayerController {
 
     @PostMapping("/register")
     public void registerPlayer(@RequestBody PlayerRegistrationDTO registrationData) {
-        // Encoder le mot de passe avant de sauvegarder
         String encodedPassword = passwordEncoder.encode(registrationData.getPassword());
         playerService.createPlayer(registrationData.getUsername(), encodedPassword, registrationData.getEmail());
     }
 
     @PostMapping("/login")
-    public boolean loginPlayer(@RequestParam String username, @RequestParam String password) {
-        Player player = playerService.findByUsername(username);
+    public boolean loginPlayer(@RequestBody PlayerLoginDTO loginData) {
+        Player player = playerService.findByUsername(loginData.getUsername());
 
         if (player == null) {
             System.out.println("Utilisateur non trouvé");
             return false;
         }
 
-        boolean passwordMatch = passwordEncoder.matches(password, player.getPasswordHash());
+        boolean passwordMatch = passwordEncoder.matches(loginData.getPassword(), player.getPasswordHash());
         if (!passwordMatch) {
             System.out.println("Le mot de passe ne correspond pas");
         }
