@@ -1,5 +1,6 @@
 package com.backcasino.controller;
 
+import com.backcasino.DTO.GameCreationRequest;
 import com.backcasino.models.Game;
 import com.backcasino.models.Player;
 import com.backcasino.models.Bet;
@@ -8,6 +9,7 @@ import com.backcasino.services.GameService;
 import com.backcasino.services.PlayerService;
 import com.backcasino.services.BetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,16 +27,10 @@ public class GameController {
     private BetService betService;
 
     @PostMapping("/create")
-    public GameDTO createGame(@RequestParam Integer playerId, @RequestParam int betAmount) {
-        Game game = gameService.createGame(playerId, betAmount);
-        return new GameDTO(game);
-    }
-
-    @PostMapping("/start")
-    public GameDTO startGame(@RequestParam Integer gameId) {
-        Game game = gameService.findById(gameId);
-        gameService.startGame(game);
-        return new GameDTO(game);
+    public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
+        Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
+        GameDTO gamedto = new GameDTO(game);
+        return ResponseEntity.ok(gamedto);
     }
 
     @PostMapping("/hit")

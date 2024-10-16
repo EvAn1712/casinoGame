@@ -36,6 +36,7 @@ public class GameService {
         game.getDeck().shuffle();
         game.setPlayer(player);
         game.setStartTime(LocalDateTime.now());
+        startGame(game);
         return gameDAO.save(game);
     }
 
