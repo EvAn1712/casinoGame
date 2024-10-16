@@ -28,9 +28,9 @@ public class PlayerController {
         try {
             String encodedPassword = passwordEncoder.encode(registrationData.getPassword());
             playerService.createPlayer(registrationData.getUsername(), encodedPassword, registrationData.getEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body("Utilisateur enregistré avec succès");
+            return ResponseEntity.status(HttpStatus.CREATED).body("{msg : Utilisateur enregistré avec succès}");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur lors de l'enregistrement");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{msg : Erreur lors de l'enregistrement}");
         }
     }
 
@@ -40,13 +40,13 @@ public class PlayerController {
 
         if (player == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Utilisateur non trouvé");
+                    .body("{msg : Utilisateur non trouvé}");
         }
 
         boolean passwordMatch = passwordEncoder.matches(loginData.getPassword(), player.getPasswordHash());
         if (!passwordMatch) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Mot de passe incorrect");
+                    .body("{msg : Mot de passe incorrect}");
         }
 
         PlayerDTO playerDTO = new PlayerDTO(player);

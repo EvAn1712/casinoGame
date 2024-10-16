@@ -18,10 +18,8 @@ public class BetService {
     @Autowired
     private PlayerDAO playerDAO;
 
+    @Transactional
     public Bet placeBet(int amount, Player player, Game game) {
-
-        //playerDAO.save(player);
-
         Bet bet = new Bet();
         bet.setAmount(amount);
         bet.setPlayer(player);
@@ -30,35 +28,30 @@ public class BetService {
         return bet;
     }
 
-    //@Transactional
-    /*public void resolveBet(Bet bet, boolean win) {
-        Player player = bet.getPlayer();
-        if (win) {
-            player.setTokenBalance(player.getTokenBalance() + bet.getAmount() * 2);
-            bet.setOutcome(bet.getAmount());
-        } else {
-            bet.setOutcome(-bet.getAmount());
+    @Transactional
+    public void resolveBet(Bet bet, String result) {
+        Player player = playerDAO.findById(bet.getPlayer().getId()).orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        switch (result) {
+            case "win":
+                player.setTokenBalance(player.getTokenBalance() + bet.getAmount() * 2);
+                bet.setOutcome(bet.getAmount());
+                break;
+            case "loose":
+                bet.setOutcome(-bet.getAmount());
+                break;
+            case "draw":
+                player.setTokenBalance(player.getTokenBalance() + bet.getAmount());
+                bet.setOutcome(0);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid result");
         }
         playerDAO.save(player);
         betDAO.save(bet);
-    }*/
-
-    public void resolveBet(Bet bet, boolean win) {
-        int player = bet.getPlayer().getId();
-        Player players = playerDAO.findById(player).orElseThrow();
-        System.out.println(players);
-        if (win) {
-            players.setTokenBalance(players.getTokenBalance() + bet.getAmount() * 2);
-            bet.setOutcome(bet.getAmount());
-        } else {
-            bet.setOutcome(-bet.getAmount());
-        }
-        playerDAO.save(players);
-        betDAO.save(bet);
     }
 
-
-    public void deleteBet(int id) {
+    public void deleteBet(Integer id) {
         betDAO.deleteById(id);
     }
 
@@ -66,7 +59,7 @@ public class BetService {
         betDAO.deleteAll();
     }
 
-    public Bet getBet(int id) {
-        return betDAO.findById(id).orElseThrow();
+    public Bet getBet(Integer id) {
+        return betDAO.findById(id).orElseThrow(() -> new IllegalArgumentException("Bet not found"));
     }
 }

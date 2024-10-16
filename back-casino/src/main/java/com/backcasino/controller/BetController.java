@@ -30,6 +30,7 @@ public class BetController {
     public ResponseEntity<BetResponseDTO> placeBet(@RequestBody BetRequestDTO betRequest) {
         Player player = playerService.findById(betRequest.getPlayerId());
         Game game = gameService.findById(betRequest.getGameId());
+
         if (player == null || game == null) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -42,22 +43,18 @@ public class BetController {
     @GetMapping("/{id}")
     public ResponseEntity<BetResponseDTO> getBet(@PathVariable Integer id) {
         Bet bet = betService.getBet(id);
-        if (bet == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         BetResponseDTO betResponse = new BetResponseDTO(bet);
         return ResponseEntity.ok(betResponse);
     }
 
     @PostMapping("/resolve/{id}")
-    public ResponseEntity<BetResponseDTO> resolveBet(@PathVariable Integer id, @RequestParam boolean win) {
+    public ResponseEntity<BetResponseDTO> resolveBet(@PathVariable Integer id, @RequestParam String result) {
         Bet bet = betService.getBet(id);
         if (bet == null) {
             return ResponseEntity.notFound().build();
         }
 
-        betService.resolveBet(bet, win);
+        betService.resolveBet(bet, result);
         BetResponseDTO betResponse = new BetResponseDTO(bet);
         return ResponseEntity.ok(betResponse);
     }
@@ -66,15 +63,15 @@ public class BetController {
     public ResponseEntity<String> deleteBet(@PathVariable Integer id) {
         try {
             betService.deleteBet(id);
-            return ResponseEntity.ok("Bet deleted successfully");
+            return ResponseEntity.ok("{msg : Bet deleted successfully}");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error deleting bet");
+            return ResponseEntity.status(500).body("{msg : Error deleting bet}");
         }
     }
 
     @DeleteMapping("/deleteAll")
     public ResponseEntity<String> deleteAllBets() {
         betService.deleteAllBets();
-        return ResponseEntity.ok("All bets deleted successfully");
+        return ResponseEntity.ok("{msg : All bets deleted successfully}");
     }
 }

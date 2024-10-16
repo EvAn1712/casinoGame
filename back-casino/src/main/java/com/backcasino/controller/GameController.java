@@ -2,12 +2,12 @@ package com.backcasino.controller;
 
 import com.backcasino.DTO.GameCreationRequest;
 import com.backcasino.models.Game;
-import com.backcasino.models.Player;
 import com.backcasino.models.Bet;
 import com.backcasino.DTO.GameDTO;
+import com.backcasino.models.Player;
 import com.backcasino.services.GameService;
-import com.backcasino.services.PlayerService;
 import com.backcasino.services.BetService;
+import com.backcasino.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,49 +21,53 @@ public class GameController {
     private GameService gameService;
 
     @Autowired
-    private PlayerService playerService;
+    private BetService betService;
 
     @Autowired
-    private BetService betService;
+    private PlayerService playerService;
 
     @PostMapping("/create")
     public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
-        System.out.println("Player ID: " + request.getPlayerId());
         Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
-        GameDTO gamedto = new GameDTO(game);
-        return ResponseEntity.ok(gamedto);
+        Player player = game.getPlayer();
+        betService.placeBet(request.getBetAmount(), player, game);
+        GameDTO gameDTO = new GameDTO(game);
+        return ResponseEntity.ok(gameDTO);
     }
 
     @PostMapping("/hit")
-    public GameDTO playerHit(@RequestParam Integer gameId) {
+    public ResponseEntity<GameDTO> playerHit(@RequestParam Integer gameId, @RequestParam Integer betId) {
         Game game = gameService.findById(gameId);
-        gameService.playerHit(game);
-        return new GameDTO(game);
+        Bet bet = betService.getBet(betId);
+        gameService.playerHit(game, bet);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/stand")
-    public GameDTO playerStand(@RequestParam Integer gameId) {
+    public ResponseEntity<GameDTO> playerStand(@RequestParam Integer gameId, @RequestParam Integer betId) {
         Game game = gameService.findById(gameId);
-        gameService.playerStand(game);
-        return new GameDTO(game);
+        Bet bet = betService.getBet(betId);
+        gameService.playerStand(game, bet);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/surrender")
-    public GameDTO playerSurrender(@RequestParam Integer gameId) {
+    public ResponseEntity<GameDTO> playerSurrender(@RequestParam Integer gameId) {
         Game game = gameService.findById(gameId);
         gameService.playerSurrender(game);
-        return new GameDTO(game);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/double")
-    public GameDTO playerDouble(@RequestParam Integer gameId) {
+    public ResponseEntity<GameDTO> playerDouble(@RequestParam Integer gameId) {
         Game game = gameService.findById(gameId);
         gameService.playerDouble(game);
-        return new GameDTO(game);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/end")
-    public void endGame(@RequestParam Integer gameId) {
+    public ResponseEntity<Void> endGame(@RequestParam Integer gameId) {
         gameService.endGame(gameId);
+        return ResponseEntity.ok().build();
     }
 }

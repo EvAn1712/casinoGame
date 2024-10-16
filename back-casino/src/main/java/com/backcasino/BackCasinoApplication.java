@@ -34,7 +34,7 @@ public class BackCasinoApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackCasinoApplication.class, args);
     }
-
+/*
     @Bean
     public CommandLineRunner demo(BetDAO betDAO) {
         return args -> {
@@ -134,4 +134,6 @@ public class BackCasinoApplication {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    */
+
 }
