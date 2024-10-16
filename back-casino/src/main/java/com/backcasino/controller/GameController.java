@@ -28,6 +28,7 @@ public class GameController {
 
     @PostMapping("/create")
     public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
+        System.out.println("Player ID: " + request.getPlayerId());
         Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
         GameDTO gamedto = new GameDTO(game);
         return ResponseEntity.ok(gamedto);

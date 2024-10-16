@@ -1,5 +1,6 @@
 package com.backcasino.services;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.backcasino.DAO.GameDAO;
 import com.backcasino.DAO.PlayerDAO;
 import com.backcasino.models.Bet;
@@ -26,7 +27,7 @@ public class GameService {
 
     @Transactional
     public Game createGame(Integer playerId, int amount) {
-        Player player = playerDAO.findById(playerId).orElseThrow();
+        Player player = playerDAO.findById(playerId).orElseThrow(() -> new IllegalArgumentException("Player not found"));;
         if (player.getTokenBalance() < amount) {
             throw new IllegalArgumentException("Not enough tokens to play");
         }

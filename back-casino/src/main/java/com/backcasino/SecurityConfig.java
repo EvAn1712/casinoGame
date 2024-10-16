@@ -17,6 +17,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/player/register", "/player/login").permitAll()
+                        .requestMatchers("/game/**").permitAll()
+                        .requestMatchers("/bet/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
