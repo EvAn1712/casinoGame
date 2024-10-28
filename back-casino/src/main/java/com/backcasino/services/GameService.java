@@ -37,8 +37,17 @@ public class GameService {
         game.getDeck().shuffle();
         game.setPlayer(player);
         game.setStartTime(LocalDateTime.now());
+
+        // Create and associate a Bet with the Game
+        Bet bet = betService.placeBet(amount, player, game);
+        game.setBet(bet);
+
         startGame(game);
         return gameDAO.save(game);
+    }
+
+    public void save(Game game) {
+        gameDAO.save(game);
     }
 
     public void startGame(Game game) {

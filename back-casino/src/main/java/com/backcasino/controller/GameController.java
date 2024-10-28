@@ -31,11 +31,10 @@ public class GameController {
     @PostMapping("/create")
     public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
         Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
-        Player player = game.getPlayer();
-        betService.placeBet(request.getBetAmount(), player, game);
         GameDTO gameDTO = new GameDTO(game);
         return ResponseEntity.ok(gameDTO);
     }
+
     @PostMapping("/hit")
     public ResponseEntity<GameDTO> playerHit(@RequestBody GameActionRequestDTO request) {
         Game game = gameService.findById(request.getGameId());

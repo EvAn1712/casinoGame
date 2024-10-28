@@ -22,17 +22,15 @@ public class Bet {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
-    @ManyToOne
-    @JoinColumn(name = "game_id")
+    @OneToOne(mappedBy = "bet")
     private Game game;
 
     public Bet() {}
 
-    public Bet(Player player, Game game,int amount, int outcome) {
+    public Bet(Player player, Game game, int amount, int outcome) {
         this.player = player;
         this.game = game;
         this.amount = amount;
         this.outcome = outcome;
     }
-
 }

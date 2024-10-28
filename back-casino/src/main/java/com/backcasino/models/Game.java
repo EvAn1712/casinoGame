@@ -22,6 +22,10 @@ public class Game {
     @JoinColumn(name = "player_id") // Indique que player_id est la clé étrangère
     private Player player;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bet_id", referencedColumnName = "id")
+    private Bet bet;
+
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     @Transient

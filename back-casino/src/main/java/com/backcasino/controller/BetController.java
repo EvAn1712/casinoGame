@@ -36,6 +36,9 @@ public class BetController {
         }
 
         Bet bet = betService.placeBet(betRequest.getAmount(), player, game);
+        game.setBet(bet); // Associate the bet with the game
+        gameService.save(game); // Save the game with the associated bet
+
         BetResponseDTO betResponse = new BetResponseDTO(bet);
         return ResponseEntity.ok(betResponse);
     }

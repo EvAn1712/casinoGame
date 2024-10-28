@@ -20,10 +20,7 @@ public class BetService {
 
     @Transactional
     public Bet placeBet(int amount, Player player, Game game) {
-        Bet bet = new Bet();
-        bet.setAmount(amount);
-        bet.setPlayer(player);
-        bet.setGame(game);
+        Bet bet = new Bet(player, game, amount, 0);
         betDAO.save(bet);
         return bet;
     }
