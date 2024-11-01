@@ -58,10 +58,10 @@ public class GameService {
         calculatepoints(game);
     }
 
-    public void playerHit(Game game, Bet bet) {
+    public void playerHit(Game game) {
         game.getPlayerHand().add(game.getDeck().drawCard());
         calculatepoints(game);
-        checkGameStatus(game, bet);
+        checkGameStatus(game, game.getBet());
     }
 
     private void dealerHit(Game game) {
@@ -76,9 +76,9 @@ public class GameService {
         }
     }
 
-    public void playerStand(Game game, Bet bet) {
+    public void playerStand(Game game) {
         dealerPlay(game);
-        checkGameStatus(game, bet);
+        checkGameStatus(game, game.getBet());
     }
 
     public void playerSurrender(Game game) {
@@ -88,7 +88,7 @@ public class GameService {
     public void playerDouble(Game game) {
         game.getPlayerHand().add(game.getDeck().drawCard());
         game.setPlayerScore(game.getPlayerHand().stream().mapToInt(Card::getValue).sum());
-        playerStand(game, null); // No bet here, as it's called internally
+        playerStand(game);
     }
 
     private boolean checkGameStatus(Game game, Bet bet) {

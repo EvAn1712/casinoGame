@@ -39,7 +39,7 @@ public class GameController {
     public ResponseEntity<GameDTO> playerHit(@RequestBody GameActionRequestDTO request) {
         Game game = gameService.findById(request.getGameId());
         Bet bet = betService.getBet(request.getBetId());
-        gameService.playerHit(game, bet);
+        gameService.playerHit(game);
         return ResponseEntity.ok(new GameDTO(game));
     }
 
@@ -47,7 +47,7 @@ public class GameController {
     public ResponseEntity<GameDTO> playerStand(@RequestBody GameActionRequestDTO request) {
         Game game = gameService.findById(request.getGameId());
         Bet bet = betService.getBet(request.getBetId());
-        gameService.playerStand(game, bet);
+        gameService.playerStand(game);
         return ResponseEntity.ok(new GameDTO(game));
     }
 
