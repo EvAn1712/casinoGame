@@ -32,10 +32,10 @@ public class BetService {
         switch (result) {
             case "win":
                 player.setTokenBalance(player.getTokenBalance() + bet.getAmount() * 2);
-                bet.setOutcome(bet.getAmount());
+                bet.setOutcome(bet.getAmount() * 2);
                 break;
-            case "loose":
-                bet.setOutcome(-bet.getAmount());
+            case "lose":
+                bet.setOutcome(bet.getAmount() * -1);
                 break;
             case "draw":
                 player.setTokenBalance(player.getTokenBalance() + bet.getAmount());

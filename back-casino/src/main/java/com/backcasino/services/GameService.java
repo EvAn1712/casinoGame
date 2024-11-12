@@ -38,7 +38,6 @@ public class GameService {
         game.setPlayer(player);
         game.setStartTime(LocalDateTime.now());
 
-        // Create and associate a Bet with the Game
         Bet bet = betService.placeBet(amount, player, game);
         game.setBet(bet);
 
@@ -61,28 +60,30 @@ public class GameService {
     public void playerHit(Game game) {
         game.getPlayerHand().add(game.getDeck().drawCard());
         calculatepoints(game);
-        checkGameStatus(game, game.getBet());
+        if (game.getPlayerScore() > 21) {
+            determineGameOutcome(game, game.getBet());
+        }
     }
 
     private void dealerHit(Game game) {
         game.getDealerHand().add(game.getDeck().drawCard());
         calculatepoints(game);
-        checkGameStatus(game, null); // Pass null for bet since it's called internally
     }
 
     private void dealerPlay(Game game) {
-        while (game.getDealerScore() < 17) {
+        while (game.getDealerScore() < 17 && game.getDealerScore() < game.getPlayerScore()) {
             dealerHit(game);
         }
+        determineGameOutcome(game, game.getBet());
     }
 
     public void playerStand(Game game) {
         dealerPlay(game);
-        checkGameStatus(game, game.getBet());
     }
 
     public void playerSurrender(Game game) {
         game.setGameOver(true);
+        determineGameOutcome(game, game.getBet());
     }
 
     public void playerDouble(Game game) {
@@ -91,25 +92,20 @@ public class GameService {
         playerStand(game);
     }
 
-    private boolean checkGameStatus(Game game, Bet bet) {
+    public void determineGameOutcome(Game game, Bet bet) {
         if (game.getPlayerScore() > 21) {
-            game.setGameOver(true);
             loseGame(game, bet);
-            return false;
-        } else if (game.getDealerScore() > 21) {
-            game.setGameOver(true);
+            System.out.println("Vous avez perdu.");
+        } else if (game.getDealerScore() > 21 || game.getPlayerScore() > game.getDealerScore()) {
             winGame(game, bet);
-            return true;
-        } else if (game.getPlayerScore() == 21) {
-            game.setGameOver(true);
-            winGame(game, bet);
-            return true;
-        } else if (game.getDealerScore() == 21) {
-            game.setGameOver(true);
+            System.out.println("Vous avez gagné !");
+        } else if (game.getPlayerScore() == game.getDealerScore()) {
+            drawGame(game, bet);
+            System.out.println("Égalité.");
+        } else {
             loseGame(game, bet);
-            return false;
+            System.out.println("Vous avez perdu.");
         }
-        return false;
     }
 
     public void winGame(Game game, Bet bet) {
@@ -120,7 +116,7 @@ public class GameService {
 
     public void loseGame(Game game, Bet bet) {
         game.setGameOver(true);
-        betService.resolveBet(bet, "loose");
+        betService.resolveBet(bet, "lose");
         gameDAO.save(game);
     }
 
@@ -138,19 +134,6 @@ public class GameService {
 
     public Game findById(Integer gameId) {
         return gameDAO.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
-    }
-
-    public void WinLoose(Game game, Bet bet) {
-        if (game.getPlayerScore() > 21 || (game.getDealerScore() > game.getPlayerScore() && game.getDealerScore() <= 21)) {
-            loseGame(game, bet);
-            System.out.println("Vous avez perdu.");
-        } else if (game.getDealerScore() > 21 || (game.getPlayerScore() > game.getDealerScore() && game.getPlayerScore() <= 21)) {
-            winGame(game, bet);
-            System.out.println("Vous avez gagné !");
-        } else {
-            drawGame(game, bet);
-            System.out.println("Égalité.");
-        }
     }
 
     public void calculatepoints(Game game) {

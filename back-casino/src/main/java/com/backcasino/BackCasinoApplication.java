@@ -34,7 +34,7 @@ public class BackCasinoApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackCasinoApplication.class, args);
     }
-/*
+
     @Bean
     public CommandLineRunner demo(BetDAO betDAO) {
         return args -> {
@@ -58,10 +58,10 @@ public class BackCasinoApplication {
             //Bet bet = new Bet();
 
             Game game = gameService.createGame(player.getId(), betAmount);
-            Bet bet = betService.placeBet(betAmount, player, game);
+            //Bet bet = betService.placeBet(betAmount, player, game);
             //betDAO.save(bet);
 
-            gameService.startGame(game);
+            //gameService.startGame(game);
 
             System.out.println("Jeu démarré pour le joueur " + game.getPlayer().getUsername());
             afficherEtatJeu(game);
@@ -110,14 +110,6 @@ public class BackCasinoApplication {
                 }
             }
 
-            if (game.getPlayerScore() > 21 || game.getDealerScore() >= game.getPlayerScore()) {
-                gameService.loseGame(game, bet);
-                System.out.println("Vous avez perdu.");
-            } else {
-                gameService.winGame(game, bet);
-                System.out.println("Vous avez gagné !");
-            }
-
             gameService.endGame(game.getId());
             System.out.println("Partie terminée pour le joueur " + game.getPlayer().getUsername());
         };
@@ -134,6 +126,5 @@ public class BackCasinoApplication {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    */
 
 }
