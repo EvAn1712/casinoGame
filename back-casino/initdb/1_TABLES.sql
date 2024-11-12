@@ -26,6 +26,10 @@ CREATE TABLE games (
                        end_time TIMESTAMP,
                        is_game_over BOOLEAN DEFAULT FALSE,
                        bet_id INT,
+                       dealer_score INT DEFAULT 0,
+                       player_score INT DEFAULT 0,
+                       player_hand TEXT,
+                       dealer_hand TEXT,
                        FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
 );
 
