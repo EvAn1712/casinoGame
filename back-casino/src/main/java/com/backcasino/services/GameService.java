@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,9 @@ public class GameService {
 
     @Autowired
     private BetService betService;
+
+    private List<Card> playerHand = new ArrayList<>();
+    private List<Card> dealerHand = new ArrayList<>();
 
     @Transactional
     public Game createGame(Integer playerId, int amount) {
@@ -50,15 +54,20 @@ public class GameService {
     }
 
     public void startGame(Game game) {
-        game.getPlayerHand().add(game.getDeck().drawCard());
-        game.getDealerHand().add(game.getDeck().drawCard());
-        game.getPlayerHand().add(game.getDeck().drawCard());
-        game.getDealerHand().add(game.getDeck().drawCard());
+
+        playerHand.add(game.getDeck().drawCard());
+        dealerHand.add(game.getDeck().drawCard());
+        playerHand.add(game.getDeck().drawCard());
+        dealerHand.add(game.getDeck().drawCard());
+
+        game.setPlayerHand(playerHand);
+        game.setDealerHand(dealerHand);
         calculatepoints(game);
     }
 
     public void playerHit(Game game) {
-        game.getPlayerHand().add(game.getDeck().drawCard());
+        playerHand.add(game.getDeck().drawCard());
+        game.setPlayerHand(playerHand);
         calculatepoints(game);
         if (game.getPlayerScore() > 21) {
             determineGameOutcome(game, game.getBet());
@@ -66,7 +75,8 @@ public class GameService {
     }
 
     private void dealerHit(Game game) {
-        game.getDealerHand().add(game.getDeck().drawCard());
+        dealerHand.add(game.getDeck().drawCard());
+        game.setDealerHand(dealerHand);
         calculatepoints(game);
     }
 
@@ -87,7 +97,8 @@ public class GameService {
     }
 
     public void playerDouble(Game game) {
-        game.getPlayerHand().add(game.getDeck().drawCard());
+        playerHand.add(game.getDeck().drawCard());
+        game.setPlayerHand(playerHand);
         calculatepoints(game);
         playerStand(game);
     }
