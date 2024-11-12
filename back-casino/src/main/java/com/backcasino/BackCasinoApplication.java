@@ -55,13 +55,7 @@ public class BackCasinoApplication {
             System.out.print("Entrez le montant du pari : ");
             int betAmount = scanner2.nextInt();
 
-            //Bet bet = new Bet();
-
             Game game = gameService.createGame(player.getId(), betAmount);
-            //Bet bet = betService.placeBet(betAmount, player, game);
-            //betDAO.save(bet);
-
-            //gameService.startGame(game);
 
             System.out.println("Jeu démarré pour le joueur " + game.getPlayer().getUsername());
             afficherEtatJeu(game);

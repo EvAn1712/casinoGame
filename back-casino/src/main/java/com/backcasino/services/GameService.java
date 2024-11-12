@@ -88,7 +88,7 @@ public class GameService {
 
     public void playerDouble(Game game) {
         game.getPlayerHand().add(game.getDeck().drawCard());
-        game.setPlayerScore(game.getPlayerHand().stream().mapToInt(Card::getValue).sum());
+        calculatepoints(game);
         playerStand(game);
     }
 
@@ -105,6 +105,9 @@ public class GameService {
         } else {
             loseGame(game, bet);
             System.out.println("Vous avez perdu.");
+        }
+        if (game.isGameOver()) {
+            endGame(game.getId());
         }
     }
 
@@ -145,6 +148,7 @@ public class GameService {
         if (HandHaveAce(game.getDealerHand()) > 0 && game.getDealerScore() > 21) {
             game.setDealerScore(game.getDealerScore() - 10);
         }
+
     }
 
     public int HandHaveAce(List<Card> hand) {
