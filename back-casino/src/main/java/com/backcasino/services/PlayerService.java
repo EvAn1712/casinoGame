@@ -1,6 +1,7 @@
 package com.backcasino.services;
 
 import com.backcasino.DAO.PlayerDAO;
+import com.backcasino.models.Performance;
 import com.backcasino.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,9 @@ public class PlayerService {
     private PlayerDAO playerDAO;
 
     @Autowired
+    private PlayerStatisticService playerStatisticService;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void createPlayer(String username, String passwordHash, String email) {
@@ -21,6 +25,7 @@ public class PlayerService {
         player.setPasswordHash(passwordHash);
         player.setEmail(email);
         player.setTokenBalance(1000);
+        playerStatisticService.createPlayerStatistics(player.getId(), 0, 0, 0, 0, 0);
         playerDAO.save(player);
     }
 
@@ -30,6 +35,13 @@ public class PlayerService {
 
     public Player findByUsername(String username) {
         return playerDAO.findByUsername(username);
+    }
+    public Performance getPlayerStatistics(Integer playerId) {
+        Player player = playerDAO.findById(playerId).orElse(null);
+        if (player != null) {
+            return playerStatisticService.findByPlayerId(playerId);
+        }
+        return null;
     }
 
 }

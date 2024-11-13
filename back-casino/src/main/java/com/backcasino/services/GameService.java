@@ -2,10 +2,8 @@ package com.backcasino.services;
 
 import com.backcasino.DAO.GameDAO;
 import com.backcasino.DAO.PlayerDAO;
-import com.backcasino.models.Bet;
-import com.backcasino.models.Card;
-import com.backcasino.models.Game;
-import com.backcasino.models.Player;
+import com.backcasino.DAO.PlayerStatisticDAO;
+import com.backcasino.models.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +24,17 @@ public class GameService {
     @Autowired
     private BetService betService;
 
+    @Autowired
+    private PlayerService playerService;
+
+
+    @Autowired
+    private PlayerStatisticService playerStatisticService;
+
     private List<Card> playerHand = new ArrayList<>();
     private List<Card> dealerHand = new ArrayList<>();
+    @Autowired
+    private PlayerStatisticDAO playerStatisticDAO;
 
     @Transactional
     public Game createGame(Integer playerId, int amount) {
@@ -125,18 +132,36 @@ public class GameService {
     public void winGame(Game game, Bet bet) {
         game.setGameOver(true);
         betService.resolveBet(bet, "win");
+        playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesWon() +1,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens()+bet.getAmount(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets());
         gameDAO.save(game);
     }
 
     public void loseGame(Game game, Bet bet) {
         game.setGameOver(true);
         betService.resolveBet(bet, "lose");
+        playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesWon(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost()+1,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets()+bet.getAmount());
         gameDAO.save(game);
     }
 
     public void drawGame(Game game, Bet bet) {
         game.setGameOver(true);
         betService.resolveBet(bet, "draw");
+        playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesWon() ,
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens(),
+                this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets());
         gameDAO.save(game);
     }
 
