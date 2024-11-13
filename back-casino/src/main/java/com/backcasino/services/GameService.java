@@ -123,9 +123,6 @@ public class GameService {
             loseGame(game, bet);
             System.out.println("Vous avez perdu.");
         }
-        if (game.isGameOver()) {
-            endGame(game.getId());
-        }
     }
 
     public void winGame(Game game, Bet bet) {
@@ -137,6 +134,7 @@ public class GameService {
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens()+bet.getAmount(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets());
+        game.setEndTime(LocalDateTime.now());
         gameDAO.save(game);
     }
 
@@ -149,6 +147,7 @@ public class GameService {
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost()+1,
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets()+bet.getAmount());
+        game.setEndTime(LocalDateTime.now());
         gameDAO.save(game);
     }
 
@@ -161,14 +160,10 @@ public class GameService {
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesLost(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalTokens(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getTotalBets());
-        gameDAO.save(game);
-    }
-
-    public void endGame(Integer gameId) {
-        Game game = gameDAO.findById(gameId).orElseThrow();
         game.setEndTime(LocalDateTime.now());
         gameDAO.save(game);
     }
+
 
     public Game findById(Integer gameId) {
         return gameDAO.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
