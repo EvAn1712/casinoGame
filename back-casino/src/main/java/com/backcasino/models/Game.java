@@ -19,7 +19,7 @@ public class Game {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "player_id") // Indique que player_id est la clé étrangère
+    @JoinColumn(name = "player_id")
     private Player player;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -32,7 +32,17 @@ public class Game {
     private int dealerScore;
     @Transient
     private int playerScore;
-    private boolean isGameOver;
+
+    public enum GameStatus {
+        PROGRESS,
+        WIN,
+        LOSE,
+        DRAW
+    }
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private GameStatus isGameOver;
+
     @Transient
     private List<Card> playerHand;
     @Transient
@@ -45,7 +55,7 @@ public class Game {
         this.dealerHand = new ArrayList<>();
         this.playerScore = 0;
         this.dealerScore = 0;
-        this.isGameOver = false;
+        this.isGameOver = GameStatus.PROGRESS;
         this.deck = new Deck();
     }
 
@@ -59,7 +69,7 @@ public class Game {
                 ", endTime=" + endTime +
                 ", dealerScore=" + dealerScore +
                 ", playerScore=" + playerScore +
-                ", isGameOver=" + isGameOver +
+                ", gameStatus=" + isGameOver +
                 ", playerHand=" + playerHand +
                 ", dealerHand=" + dealerHand +
                 ", deck=" + deck +

@@ -24,7 +24,7 @@ CREATE TABLE games (
                        player_id INT NOT NULL,
                        start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        end_time TIMESTAMP,
-                       is_game_over BOOLEAN DEFAULT FALSE,
+                       is_game_over VARCHAR(10) DEFAULT 'IN_PROGRESS',
                        bet_id INT,
                        dealer_score INT DEFAULT 0,
                        player_score INT DEFAULT 0,

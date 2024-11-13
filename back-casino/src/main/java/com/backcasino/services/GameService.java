@@ -1,15 +1,17 @@
 package com.backcasino.services;
 
+import com.backcasino.DAO.PlayerStatisticDAO;
+import com.backcasino.models.Bet;
+import com.backcasino.models.Card;
+import com.backcasino.models.Game;
 import com.backcasino.DAO.GameDAO;
 import com.backcasino.DAO.PlayerDAO;
-import com.backcasino.DAO.PlayerStatisticDAO;
-import com.backcasino.models.*;
+import com.backcasino.models.Player;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,6 +70,7 @@ public class GameService {
 
         game.setPlayerHand(game.getPlayerHand());
         game.setDealerHand(game.getDealerHand());
+        game.setIsGameOver(Game.GameStatus.PROGRESS);
         calculatepoints(game);
     }
 
@@ -98,7 +101,6 @@ public class GameService {
     }
 
     public void playerSurrender(Game game) {
-        game.setGameOver(true);
         determineGameOutcome(game, game.getBet());
     }
 
@@ -126,7 +128,7 @@ public class GameService {
     }
 
     public void winGame(Game game, Bet bet) {
-        game.setGameOver(true);
+        game.setIsGameOver(Game.GameStatus.WIN);
         betService.resolveBet(bet, "win");
         playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
@@ -139,7 +141,7 @@ public class GameService {
     }
 
     public void loseGame(Game game, Bet bet) {
-        game.setGameOver(true);
+        game.setIsGameOver(Game.GameStatus.LOSE);
         betService.resolveBet(bet, "lose");
         playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
@@ -152,7 +154,7 @@ public class GameService {
     }
 
     public void drawGame(Game game, Bet bet) {
-        game.setGameOver(true);
+        game.setIsGameOver(Game.GameStatus.DRAW);
         betService.resolveBet(bet, "draw");
         playerStatisticService.updatePlayerStatistics(game.getPlayer().getId(),
                 this.playerService.getPlayerStatistics(game.getPlayer().getId()).getGamesPlayed()+1,
@@ -163,7 +165,6 @@ public class GameService {
         game.setEndTime(LocalDateTime.now());
         gameDAO.save(game);
     }
-
 
     public Game findById(Integer gameId) {
         return gameDAO.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
@@ -178,7 +179,6 @@ public class GameService {
         if (HandHaveAce(game.getDealerHand()) > 0 && game.getDealerScore() > 21) {
             game.setDealerScore(game.getDealerScore() - 10);
         }
-
     }
 
     public int HandHaveAce(List<Card> hand) {

@@ -18,7 +18,7 @@ public class GameDTO {
     private List<Card> dealerHand;
     private int playerScore;
     private int dealerScore;
-    private boolean isGameOver;
+    private Game.GameStatus gameStatus;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Deck deck;
@@ -30,7 +30,7 @@ public class GameDTO {
         this.dealerHand = game.getDealerHand();
         this.playerScore = game.getPlayerScore();
         this.dealerScore = game.getDealerScore();
-        this.isGameOver = game.isGameOver();
+        this.gameStatus = game.getIsGameOver();
         this.startTime = game.getStartTime();
         this.endTime = game.getEndTime();
         this.deck = game.getDeck();

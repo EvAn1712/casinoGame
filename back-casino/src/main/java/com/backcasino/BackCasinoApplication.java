@@ -98,13 +98,12 @@ public class BackCasinoApplication {
                         System.out.println("Choix non valide. Veuillez entrer un numéro entre 1 et 4.");
                 }
 
-                if (game.isGameOver()) {
+                if (game.getIsGameOver() != Game.GameStatus.PROGRESS) {
                     System.out.println("La partie est terminée.");
                     finDuJeu = true;
                 }
             }
 
-            gameService.endGame(game.getId());
             System.out.println("Partie terminée pour le joueur " + game.getPlayer().getUsername());
         };
     }
