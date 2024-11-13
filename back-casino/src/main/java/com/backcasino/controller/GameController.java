@@ -1,11 +1,8 @@
 package com.backcasino.controller;
 
-import com.backcasino.DTO.GameActionRequestDTO;
-import com.backcasino.DTO.GameCreationRequest;
-import com.backcasino.DTO.GameEndRequestDTO;
+import com.backcasino.DTO.*;
 import com.backcasino.models.Game;
 import com.backcasino.models.Bet;
-import com.backcasino.DTO.GameDTO;
 import com.backcasino.models.Player;
 import com.backcasino.services.GameService;
 import com.backcasino.services.BetService;
@@ -36,7 +33,9 @@ public class GameController {
     }
 
     @PostMapping("/hit")
-    public ResponseEntity<GameDTO> playerHit(@RequestBody GameActionRequestDTO request) {
+    public ResponseEntity<GameDTO> playerHit(@RequestBody GameRequestDTO requestDTO) {
+        GameActionRequestDTO request = requestDTO.getGame();
+
         Game game = gameService.findById(request.getGameId());
         game.setPlayerHand(request.getPlayerHand());
         game.setDealerHand(request.getDealerHand());
@@ -48,6 +47,7 @@ public class GameController {
         GameDTO gamedto = new GameDTO(game);
         return ResponseEntity.ok(gamedto);
     }
+
 
 
     @PostMapping("/stand")
