@@ -1,6 +1,7 @@
 package com.backcasino.DTO;
 
 import com.backcasino.models.Card;
+import com.backcasino.models.Deck;
 import com.backcasino.models.Game;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class GameDTO {
     private boolean isGameOver;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private Deck deck;
 
     public GameDTO(Game game) {
         this.gameId = game.getId();
@@ -31,5 +33,6 @@ public class GameDTO {
         this.isGameOver = game.isGameOver();
         this.startTime = game.getStartTime();
         this.endTime = game.getEndTime();
+        this.deck = game.getDeck();
     }
 }
