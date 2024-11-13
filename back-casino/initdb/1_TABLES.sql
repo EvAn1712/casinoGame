@@ -28,8 +28,6 @@ CREATE TABLE games (
                        bet_id INT,
                        dealer_score INT DEFAULT 0,
                        player_score INT DEFAULT 0,
-                       player_hand TEXT,
-                       dealer_hand TEXT,
                        FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
 );
 
