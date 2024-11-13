@@ -23,6 +23,7 @@ public class GameDTO {
     private LocalDateTime endTime;
     private Deck deck;
     private Game.GameStatus isGameOver;
+    private int betAmount;
 
     public GameDTO(Game game) {
         this.gameId = game.getId();
@@ -36,5 +37,6 @@ public class GameDTO {
         this.endTime = game.getEndTime();
         this.deck = game.getDeck();
         this.isGameOver = game.getIsGameOver();
+        this.betAmount = game.getPlayer().getTokenBalance();
     }
 }

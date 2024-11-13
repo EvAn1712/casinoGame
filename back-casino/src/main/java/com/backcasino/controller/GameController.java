@@ -49,7 +49,9 @@ public class GameController {
     }
 
     @PostMapping("/stand")
-    public ResponseEntity<GameDTO> playerStand(@RequestBody GameActionRequestDTO request) {
+    public ResponseEntity<GameDTO> playerStand(@RequestBody GameRequestDTO requestDTO) {
+        GameActionRequestDTO request = requestDTO.getGame();
+
         Game game = gameService.findById(request.getGameId());
         game.setPlayerHand(request.getPlayerHand());
         game.setDealerHand(request.getDealerHand());
@@ -62,7 +64,9 @@ public class GameController {
     }
 
     @PostMapping("/surrender")
-    public ResponseEntity<GameDTO> playerSurrender(@RequestBody GameActionRequestDTO request) {
+    public ResponseEntity<GameDTO> playerSurrender(@RequestBody GameRequestDTO requestDTO) {
+        GameActionRequestDTO request = requestDTO.getGame();
+
         Game game = gameService.findById(request.getGameId());
         game.setPlayerHand(request.getPlayerHand());
         game.setDealerHand(request.getDealerHand());
