@@ -40,12 +40,14 @@ public class GameController {
     @PostMapping("/hit")
     public ResponseEntity<GameDTO> playerHit() {
         Game game = gameService.findById(gameDTO.getGameId());
+        game.setDeck(gameDTO.getDeck());
         game.setPlayerHand(gameDTO.getPlayerHand());
         game.setPlayerScore(gameDTO.getPlayerScore());
         game.setDealerHand(gameDTO.getDealerHand());
         game.setDealerScore(gameDTO.getDealerScore());
         gameService.playerHit(game);
-        return ResponseEntity.ok(new GameDTO(game));
+        gameDTO = new GameDTO(game);
+        return ResponseEntity.ok(gameDTO);
     }
 
     @PostMapping("/stand")
