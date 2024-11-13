@@ -28,17 +28,22 @@ public class GameController {
     @Autowired
     private PlayerService playerService;
 
-    Game game;
+    GameDTO gameDTO;
 
     @PostMapping("/create")
     public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
-        game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
-        GameDTO gameDTO = new GameDTO(game);
+        Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
+        gameDTO = new GameDTO(game);
         return ResponseEntity.ok(gameDTO);
     }
 
     @PostMapping("/hit")
     public ResponseEntity<GameDTO> playerHit() {
+        Game game = gameService.findById(gameDTO.getGameId());
+        game.setPlayerHand(gameDTO.getPlayerHand());
+        game.setPlayerScore(gameDTO.getPlayerScore());
+        game.setDealerHand(gameDTO.getDealerHand());
+        game.setDealerScore(gameDTO.getDealerScore());
         gameService.playerHit(game);
         return ResponseEntity.ok(new GameDTO(game));
     }
