@@ -49,4 +49,20 @@ public class Game {
         this.deck = new Deck();
     }
 
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", player=" + player +
+                ", bet=" + bet +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", dealerScore=" + dealerScore +
+                ", playerScore=" + playerScore +
+                ", isGameOver=" + isGameOver +
+                ", playerHand=" + playerHand +
+                ", dealerHand=" + dealerHand +
+                ", deck=" + deck +
+                '}';
+    }
 }

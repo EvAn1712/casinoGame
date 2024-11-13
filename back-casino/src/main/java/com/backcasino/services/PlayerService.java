@@ -25,8 +25,9 @@ public class PlayerService {
         player.setPasswordHash(passwordHash);
         player.setEmail(email);
         player.setTokenBalance(1000);
-        playerStatisticService.createPlayerStatistics(player.getId(), 0, 0, 0, 0, 0);
         playerDAO.save(player);
+        playerStatisticService.createPlayerStatistics(player.getId(), 0, 0, 0, 0, 0);
+
     }
 
     public Player findById(Integer id) {
@@ -43,5 +44,4 @@ public class PlayerService {
         }
         return null;
     }
-
 }

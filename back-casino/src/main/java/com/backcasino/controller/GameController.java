@@ -28,6 +28,7 @@ public class GameController {
     @PostMapping("/create")
     public ResponseEntity<GameDTO> createGame(@RequestBody GameCreationRequest request) {
         Game game = gameService.createGame(request.getPlayerId(), request.getBetAmount());
+        System.out.println(game);
         GameDTO gamedto = new GameDTO(game);
         return ResponseEntity.ok(gamedto);
     }
@@ -35,7 +36,6 @@ public class GameController {
     @PostMapping("/hit")
     public ResponseEntity<GameDTO> playerHit(@RequestBody GameRequestDTO requestDTO) {
         GameActionRequestDTO request = requestDTO.getGame();
-
         Game game = gameService.findById(request.getGameId());
         game.setPlayerHand(request.getPlayerHand());
         game.setDealerHand(request.getDealerHand());

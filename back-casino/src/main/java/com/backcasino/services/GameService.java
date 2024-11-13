@@ -31,8 +31,7 @@ public class GameService {
     @Autowired
     private PlayerStatisticService playerStatisticService;
 
-    private List<Card> playerHand = new ArrayList<>();
-    private List<Card> dealerHand = new ArrayList<>();
+
     @Autowired
     private PlayerStatisticDAO playerStatisticDAO;
 
@@ -62,19 +61,19 @@ public class GameService {
 
     public void startGame(Game game) {
 
-        playerHand.add(game.getDeck().drawCard());
-        dealerHand.add(game.getDeck().drawCard());
-        playerHand.add(game.getDeck().drawCard());
-        dealerHand.add(game.getDeck().drawCard());
+        game.getPlayerHand().add(game.getDeck().drawCard());
+        game.getDealerHand().add(game.getDeck().drawCard());
+        game.getPlayerHand().add(game.getDeck().drawCard());
+        game.getDealerHand().add(game.getDeck().drawCard());
 
-        game.setPlayerHand(playerHand);
-        game.setDealerHand(dealerHand);
+        game.setPlayerHand(game.getPlayerHand());
+        game.setDealerHand(game.getDealerHand());
         calculatepoints(game);
     }
 
     public void playerHit(Game game) {
-        playerHand.add(game.getDeck().drawCard());
-        game.setPlayerHand(playerHand);
+        game.getPlayerHand().add(game.getDeck().drawCard());
+        game.setPlayerHand(game.getPlayerHand());
         calculatepoints(game);
         if (game.getPlayerScore() > 21) {
             determineGameOutcome(game, game.getBet());
@@ -82,8 +81,8 @@ public class GameService {
     }
 
     private void dealerHit(Game game) {
-        dealerHand.add(game.getDeck().drawCard());
-        game.setDealerHand(dealerHand);
+        game.getDealerHand().add(game.getDeck().drawCard());
+        game.setDealerHand(game.getDealerHand());
         calculatepoints(game);
     }
 
@@ -104,8 +103,8 @@ public class GameService {
     }
 
     public void playerDouble(Game game) {
-        playerHand.add(game.getDeck().drawCard());
-        game.setPlayerHand(playerHand);
+        game.getPlayerHand().add(game.getDeck().drawCard());
+        game.setPlayerHand(game.getPlayerHand());
         calculatepoints(game);
         playerStand(game);
     }
