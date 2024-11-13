@@ -19,6 +19,8 @@ public class SecurityConfig {
                         .requestMatchers("/player/register", "/player/login").permitAll()
                         .requestMatchers("/game/**").permitAll()
                         .requestMatchers("/bet/**").permitAll()
+                        .requestMatchers("/playerStatistics/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }

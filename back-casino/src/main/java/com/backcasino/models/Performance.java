@@ -46,4 +46,18 @@ public class Performance {
         this.totalTokens = totalTokens;
         this.totalBets = totalBets;
     }
+
+    @Override
+    public String toString() {
+        return "Performance{" +
+                "id=" + id +
+                ", playerId=" + playerId +
+                ", gamesPlayed=" + gamesPlayed +
+                ", gamesWon=" + gamesWon +
+                ", gamesLost=" + gamesLost +
+                ", totalTokens=" + totalTokens +
+                ", totalBets=" + totalBets +
+                ", player=" + player +
+                '}';
+    }
 }

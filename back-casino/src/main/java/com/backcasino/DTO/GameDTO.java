@@ -22,6 +22,7 @@ public class GameDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Deck deck;
+    private Game.GameStatus isGameOver;
 
     public GameDTO(Game game) {
         this.gameId = game.getId();
@@ -34,5 +35,6 @@ public class GameDTO {
         this.startTime = game.getStartTime();
         this.endTime = game.getEndTime();
         this.deck = game.getDeck();
+        this.isGameOver = game.getIsGameOver();
     }
 }

@@ -1,5 +1,6 @@
 package com.backcasino.controller;
 
+import com.backcasino.DTO.PlayerStatisticDTO;
 import com.backcasino.models.Performance;
 import com.backcasino.services.PlayerStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ public class PlayerStatisticController {
     @Autowired
     private PlayerStatisticService playerStatisticService;
 
-    @GetMapping("/{playerId}")
-    public ResponseEntity<Performance> getPlayerStatistics(@PathVariable Integer playerId) {
+    @PostMapping("/{playerId}")
+    public ResponseEntity<PlayerStatisticDTO> getPlayerStatistics(@PathVariable Integer playerId) {
         Performance performance = playerStatisticService.findByPlayerId(playerId);
-        return performance != null ? ResponseEntity.ok(performance) : ResponseEntity.notFound().build();
+        System.out.println(performance);
+        PlayerStatisticDTO playerStatisticDTO = new PlayerStatisticDTO(performance);
+        return ResponseEntity.ok(playerStatisticDTO);
     }
 }
