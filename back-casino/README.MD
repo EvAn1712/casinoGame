@@ -19,7 +19,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 ### Base de Données
 
 1. Ajoutez le fichier `.env` joint à votre projet dans le dossier `back-casino`.
-2. Créez le conteneur de la base de données PostgreSQL avec Docker. 'docker compose up --build'
+2. Créez le conteneur de la base de données PostgreSQL avec Docker. `docker compose up --build`
 3. Connectez-vous à la base de données depuis votre IDE (le nom, l'utilisateur et le mot de passe sont définis dans le fichier `.env`).
 4. Exécutez le script `1_TABLES.sql` situé dans le dossier `initbd` pour construire les tables nécessaires.
 
