@@ -19,7 +19,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 ### Base de Données
 
 1. Ajoutez le fichier `.env` joint à votre projet dans le dossier `back-casino`.
-2. Créez le conteneur de la base de données PostgreSQL avec Docker.
+2. Créez le conteneur de la base de données PostgreSQL avec Docker. 'docker compose up --build'
 3. Connectez-vous à la base de données depuis votre IDE (le nom, l'utilisateur et le mot de passe sont définis dans le fichier `.env`).
 4. Exécutez le script `1_TABLES.sql` situé dans le dossier `initbd` pour construire les tables nécessaires.
 
@@ -29,7 +29,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 2. Sélectionnez `BackCasinoApplication`.
 3. Cochez **Enable env file** et ajoutez le fichier `.env`.
 
-Une fois ces étapes terminées, vous pouvez lancer le backend depuis votre IDE.
+Une fois ces étapes terminées, vous pouvez lancer le backend depuis votre IDE (il faut run `BackCasinoApplication`).
 
 ---
 
@@ -61,15 +61,18 @@ L'objectif est d'obtenir une main dont la somme des cartes est aussi proche que 
 
 ### Déroulement du Jeu
 
-1. **Distribution des Cartes** :
+1. **Choix de la mise** :
+   - Vous devez dans un premier temps choisir le montant de votre parie et cliqué sur Jouer
+
+2. **Distribution des Cartes** :
    - Le joueur et le croupier reçoivent chacun **deux cartes**.
    - Les cartes du joueur sont visibles, tandis que le croupier a une carte visible et une carte cachée.
    
-2. **Tour du Joueur** :
+3. **Tour du Joueur** :
    - Le joueur peut choisir de **tirer** (recevoir une nouvelle carte) ou de **rester** (conserver sa main actuelle).
    - Si la somme des cartes dépasse **21**, le joueur **buste** et perd la partie.
    
-3. **Tour du Croupier** :
+4. **Tour du Croupier** :
    - Une fois le tour du joueur terminé, le croupier révèle sa carte cachée.
    - Il choisit de **tirer** ou de **rester** jusqu'à atteindre un minimum de **17**.
    - Si la somme des cartes du croupier dépasse **21**, il **buste** et le joueur gagne.
@@ -92,7 +95,7 @@ L'objectif est d'obtenir une main dont la somme des cartes est aussi proche que 
 
 ---
 
-## 4. Règles Spécifiques du Croupier
+## 5. Règles Spécifiques du Croupier
 
 - Le croupier **doit tirer des cartes jusqu'à atteindre 17**.
 - Le croupier **buste** si sa main dépasse 21.
