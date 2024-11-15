@@ -88,7 +88,7 @@ L'objectif est d'obtenir une main dont la somme des cartes est aussi proche que 
 ### Mise
 
 - Le joueur place une mise avant chaque partie.
-- En cas de victoire, le joueur récupère sa mise doublée (sauf en cas de Blackjack, où il gagne 1,5 fois la mise).
+- En cas de victoire, le joueur récupère sa mise doublée
 
 ---
 
