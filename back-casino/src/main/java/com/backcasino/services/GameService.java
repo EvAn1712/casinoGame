@@ -101,7 +101,7 @@ public class GameService {
     }
 
     public void playerSurrender(Game game) {
-        determineGameOutcome(game, game.getBet());
+        loseGame(game, game.getBet());
     }
 
     public void playerDouble(Game game) {
